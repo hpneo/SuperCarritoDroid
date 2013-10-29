@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <!-- <style name="AppBaseTheme" parent="@style/Theme.Sherlock.Light">
+        <item name="actionBarDivider">@null</item>
+    </style> -->
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="@style/Theme.Sherlock.Light">
+        <item name="actionBarStyle">@style/Style.ActionBar</item>
+        <item name="actionBarDivider">@null</item>
+    </style>
+    
+    <style name="Style.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid">
+        <item name="titleTextStyle">@style/Style.ActionBar.TitleTextStyle</item>
+        <item name="android:textColor">#e0e0e0</item>
+        <item name="background">@color/actionbar_background_start</item>
+        <item name="android:background">@color/actionbar_background_start</item>
+    </style>
+    
+    <style name="Style.ActionBar.TitleTextStyle" parent="TextAppearance.Sherlock.Widget.ActionBar.Title">
+        <item name="android:textColor">#e0e0e0</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="LoginFormContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
+</resources>

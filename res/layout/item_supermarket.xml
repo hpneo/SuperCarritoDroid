@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    
+    <com.loopj.android.image.SmartImageView
+        android:id="@+id/item_supermarket_image"
+        android:layout_width="80dip"
+        android:layout_height="80dip"
+        android:layout_gravity="center|left"
+	    android:paddingBottom="@dimen/item_vertical_margin"
+	    android:paddingLeft="@dimen/item_horizontal_margin"
+	    android:paddingRight="@dimen/item_horizontal_margin"
+	    android:paddingTop="@dimen/item_vertical_margin" />
+
+    <TextView
+        android:id="@+id/item_supermarket_name"
+        android:layout_width="fill_parent"
+        android:layout_height="80dip"
+        android:gravity="center_vertical"
+        android:paddingBottom="@dimen/item_vertical_margin"
+        android:paddingLeft="@dimen/item_horizontal_margin"
+        android:paddingRight="@dimen/item_horizontal_margin"
+        android:paddingTop="@dimen/item_vertical_margin"
+        android:text="" />
+
+</LinearLayout>
