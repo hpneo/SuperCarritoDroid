@@ -1,19 +1,26 @@
 package com.supercarritodroid;
 
+import com.supercarritodroid.rest.RestClient;
+import com.supercarritodroid.rest.RestClient.RequestMethod;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
@@ -38,7 +45,7 @@ public class LoginActivity extends Activity {
 	private UserLoginTask mAuthTask = null;
 
 	// Values for email and password at the time of the login attempt.
-	private String mEmail;
+	private String mUsuario;
 	private String mPassword;
 
 	// UI references.
@@ -55,9 +62,9 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.activity_login);
 
 		// Set up the login form.
-		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
-		mEmailView = (EditText) findViewById(R.id.email);
-		mEmailView.setText(mEmail);
+		mUsuario = getIntent().getStringExtra(EXTRA_EMAIL);
+		mEmailView = (EditText) findViewById(R.id.user);
+		mEmailView.setText(mUsuario);
 
 		mPasswordView = (EditText) findViewById(R.id.password);
 		mPasswordView
@@ -108,7 +115,7 @@ public class LoginActivity extends Activity {
 		mPasswordView.setError(null);
 
 		// Store values at the time of the login attempt.
-		mEmail = mEmailView.getText().toString();
+		mUsuario = mEmailView.getText().toString();
 		mPassword = mPasswordView.getText().toString();
 
 		boolean cancel = false;
@@ -119,19 +126,11 @@ public class LoginActivity extends Activity {
 			mPasswordView.setError(getString(R.string.error_field_required));
 			focusView = mPasswordView;
 			cancel = true;
-		} else if (mPassword.length() < 4) {
-			mPasswordView.setError(getString(R.string.error_invalid_password));
-			focusView = mPasswordView;
-			cancel = true;
 		}
 
 		// Check for a valid email address.
-		if (TextUtils.isEmpty(mEmail)) {
+		if (TextUtils.isEmpty(mUsuario)) {
 			mEmailView.setError(getString(R.string.error_field_required));
-			focusView = mEmailView;
-			cancel = true;
-		} else if (!mEmail.contains("@")) {
-			mEmailView.setError(getString(R.string.error_invalid_email));
 			focusView = mEmailView;
 			cancel = true;
 		}
@@ -195,40 +194,46 @@ public class LoginActivity extends Activity {
 	 * Represents an asynchronous login/registration task used to authenticate
 	 * the user.
 	 */
-	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+	public class UserLoginTask extends AsyncTask<Void, Void, String> {
 		@Override
-		protected Boolean doInBackground(Void... params) {
-			// TODO: attempt authentication against a network service.
-
+		protected String doInBackground(Void... params) {
+			RestClient client = new RestClient("http://androidservicios.somee.com/service1.svc/GET/Loguin");
+			
+			client.AddParam("usuario", mUsuario);
+			client.AddParam("contrasena", mPassword);
+			
 			try {
-				// Simulate network access.
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				return false;
+				client.Execute(RequestMethod.GET);
+				
+				Log.i("LOGIN", client.getResponse());
+				
+				return client.getResponse();
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				return "0";
 			}
-
-			for (String credential : DUMMY_CREDENTIALS) {
-				String[] pieces = credential.split(":");
-				if (pieces[0].equals(mEmail)) {
-					// Account exists, return true if the password matches.
-					return pieces[1].equals(mPassword);
-				}
-			}
-
-			// TODO: register the new account here.
-			return true;
 		}
 
 		@Override
-		protected void onPostExecute(final Boolean success) {
+		protected void onPostExecute(final String user_id) {
 			mAuthTask = null;
 			showProgress(false);
+			
+			Log.i("LOGIN", user_id);
 
-			if (success) {
+			if (!user_id.equals("0")) {
+				SharedPreferences preferences = getSharedPreferences("SuperCarritoDroidPreferences", MODE_PRIVATE);
+			    SharedPreferences.Editor preferencesEditor = preferences.edit();
+			    preferencesEditor.putString("user_id", user_id);
+			    preferencesEditor.commit();
+			    
+				Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+				intent.putExtra("activityCaller", "LoginActivity");
+				startActivity(intent);
+				
 				finish();
 			} else {
-				mPasswordView
-						.setError(getString(R.string.error_incorrect_password));
+				mPasswordView.setError(getString(R.string.error_incorrect_password));
 				mPasswordView.requestFocus();
 			}
 		}

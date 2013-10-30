@@ -10,6 +10,8 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.supercarritodroid.adapters.SupermarketListAdapter;
 import com.supercarritodroid.models.Supermarket;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ListView;
 
@@ -22,9 +24,23 @@ public class MainActivity extends SherlockActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         
-        this.actionBar = this.getSupportActionBar();
+        SharedPreferences preferences = getSharedPreferences("SuperCarritoDroidPreferences", MODE_PRIVATE);
+        
+        if (preferences.contains("user_id")) {
+        	showMain();
+        }
+        else {
+        	Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            this.startActivity(intent);
+            this.finish();
+        }
+    }
+    
+    private void showMain() {
+    	setContentView(R.layout.activity_main);
+    	this.actionBar = this.getSupportActionBar();
         this.actionBar.setTitle(R.string.title_activity_main);
         this.actionBar.setHomeButtonEnabled(true);
         this.actionBar.setDisplayShowHomeEnabled(true);
