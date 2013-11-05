@@ -42,7 +42,8 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_toRightOf="@id/textViewCategories" />
+            android:layout_toRightOf="@id/textViewCategories"
+            android:entries="@array/categories" />
     </RelativeLayout>
     
     <RelativeLayout
@@ -66,7 +67,8 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_toRightOf="@id/textViewBrands" />
+            android:layout_toRightOf="@id/textViewBrands"
+            android:entries="@array/brands" />
     </RelativeLayout>
     
     <RelativeLayout

@@ -16,5 +16,20 @@
     <string name="search_activity_brands">Marca:</string>
     <string name="search_activity_in_offer">En oferta</string>
     <string name="search_activity_search">Buscar</string>
+    
+    <string-array name="categories">
+        <item>Abarrotes</item>
+        <item>Conservas</item>
+        <item>Lacteos</item>
+    </string-array>
+    
+    <string-array name="brands">
+        <item>Cafetal</item>
+        <item>Costeño</item>
+        <item>Gloria</item>
+        <item>Kirma</item>
+        <item>Laive</item>
+        <item>Segoviana</item>
+    </string-array>
 
 </resources>
