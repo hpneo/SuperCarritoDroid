@@ -20,20 +20,12 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
 public class LoginActivity extends Activity {
-	/**
-	 * A dummy authentication store containing known user names and passwords.
-	 * TODO: remove after connecting to a real authentication system.
-	 */
-	private static final String[] DUMMY_CREDENTIALS = new String[] {
-			"foo@example.com:hello", "bar@example.com:world" };
-
 	/**
 	 * The default email to populate the email field with.
 	 */
@@ -205,9 +197,7 @@ public class LoginActivity extends Activity {
 			try {
 				client.Execute(RequestMethod.GET);
 				
-				Log.i("LOGIN", client.getResponse());
-				
-				return client.getResponse();
+				return client.getResponse().trim().replaceAll("\n", "");
 			} catch (Exception e1) {
 				e1.printStackTrace();
 				return "0";
@@ -218,8 +208,6 @@ public class LoginActivity extends Activity {
 		protected void onPostExecute(final String user_id) {
 			mAuthTask = null;
 			showProgress(false);
-			
-			Log.i("LOGIN", user_id);
 
 			if (!user_id.equals("0")) {
 				SharedPreferences preferences = getSharedPreferences("SuperCarritoDroidPreferences", MODE_PRIVATE);
