@@ -15,9 +15,11 @@
         <item name="actionBarStyle">@style/Style.ActionBar</item>
         <item name="android:actionBarStyle">@style/Style.ActionBar</item>
         <item name="actionBarDivider">@null</item>
+    	<item name="homeAsUpIndicator">@drawable/abs__ic_ab_back_holo_dark</item>
+        <item name="android:homeAsUpIndicator">@drawable/abs__ic_ab_back_holo_dark</item>
     </style>
     
-    <style name="Style.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid">
+    <style name="Style.ActionBar" parent="Widget.Sherlock.ActionBar.Solid">
         <item name="titleTextStyle">@style/Style.ActionBar.TitleTextStyle</item>
         <item name="android:titleTextStyle">@style/Style.ActionBar.TitleTextStyle</item>
         <item name="android:textColor">#e0e0e0</item>

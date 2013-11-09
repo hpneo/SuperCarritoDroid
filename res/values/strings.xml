@@ -31,5 +31,13 @@
         <item>Laive</item>
         <item>Segoviana</item>
     </string-array>
+    
+    <string-array name="menu">
+        <item>Búsqueda de productos</item>
+        <item>Lista de compras</item>
+        <item>Mis compras</item>
+        <item>Comparar lista</item>
+        <item>Salir</item>
+    </string-array>
 
 </resources>

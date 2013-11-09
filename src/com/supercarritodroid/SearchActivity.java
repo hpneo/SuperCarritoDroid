@@ -26,6 +26,7 @@ public class SearchActivity extends SherlockActivity {
         this.actionBar.setTitle(R.string.title_activity_search);
         this.actionBar.setHomeButtonEnabled(true);
         this.actionBar.setDisplayShowHomeEnabled(true);
+        this.actionBar.setDisplayHomeAsUpEnabled(true);
         
         this.supermarket = (Supermarket) getIntent().getExtras().get("supermarket");
         
