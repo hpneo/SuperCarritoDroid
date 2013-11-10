@@ -132,6 +132,5 @@ public class MainActivity extends SherlockActivity implements TaskListener {
 		});
 		
 		return super.onCreateOptionsMenu(menu);
-		
 	}
 }

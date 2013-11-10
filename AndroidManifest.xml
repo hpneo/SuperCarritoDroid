@@ -35,10 +35,16 @@
         <activity
             android:name="com.supercarritodroid.SearchActivity"
             android:label="@string/title_activity_search">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.supercarritodroid.MainActivity" />
         </activity>
         <activity
             android:name="com.supercarritodroid.ResultsActivity"
             android:label="@string/title_activity_results">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.supercarritodroid.SearchActivity" />
         </activity>
     </application>
 
