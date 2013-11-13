@@ -8,21 +8,25 @@
     <string name="title_activity_main">1. Elegir supermercado</string>
     <string name="title_activity_search">2. Llenar datos</string>
     <string name="title_activity_results">3. Resultados de búsqueda</string>
-    
     <string name="main_activity_action">Elegir supermercado:</string>
-    
     <string name="search_activity_selected_supermarket">Supermercado elegido:</string>
     <string name="search_activity_categories">Categoría:</string>
     <string name="search_activity_brands">Marca:</string>
     <string name="search_activity_in_offer">En oferta</string>
     <string name="search_activity_search">Buscar</string>
+    <string name="new_product_activity_selected_product_name">Nombre</string>
+    <string name="new_product_activity_selected_product_unit_price">Precio unitario</string>
+    <string name="new_product_activity_selected_product_date">Fecha de vencimiento</string>
+    <string name="new_product_activity_selected_product_quantity">Unidades</string>
+    <string name="new_product_activity_add_to_cart">Añadir al carrito</string>
     
+    <string name="new_product_activity_selected_product">Producto elegido:</string>
+
     <string-array name="categories">
         <item>Abarrotes</item>
         <item>Conservas</item>
         <item>Lacteos</item>
     </string-array>
-    
     <string-array name="brands">
         <item>Cafetal</item>
         <item>Costeño</item>
@@ -31,7 +35,6 @@
         <item>Laive</item>
         <item>Segoviana</item>
     </string-array>
-    
     <string-array name="menu">
         <item>Búsqueda de productos</item>
         <item>Lista de compras</item>
@@ -39,5 +42,7 @@
         <item>Comparar lista</item>
         <item>Salir</item>
     </string-array>
+
+    <string name="title_activity_new_product">NewProductActivity</string>
 
 </resources>
