@@ -36,9 +36,6 @@ public class MainActivity extends SherlockActivity implements TaskListener {
         super.onCreate(savedInstanceState);
         
         SharedPreferences preferences = getSharedPreferences("SuperCarritoDroidPreferences", MODE_PRIVATE);
-	    SharedPreferences.Editor preferencesEditor = preferences.edit();
-	    preferencesEditor.clear();
-	    preferencesEditor.commit();
         
         if (preferences.contains("user_id")) {
         	showMain();
