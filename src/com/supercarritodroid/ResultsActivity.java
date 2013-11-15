@@ -11,8 +11,13 @@ import com.supercarritodroid.models.Product;
 import com.supercarritodroid.rest.ProductFilterTask;
 import com.supercarritodroid.rest.TaskListener;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -29,6 +34,8 @@ public class ResultsActivity extends SherlockActivity implements TaskListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_results);
+		
+		final Context context = this;
         
         this.actionBar = this.getSupportActionBar();
         this.actionBar.setTitle(R.string.title_activity_search);
@@ -46,6 +53,19 @@ public class ResultsActivity extends SherlockActivity implements TaskListener {
         resultsAdapter.setNotifyOnChange(true);
         
         results.setAdapter(resultsAdapter);
+        
+        results.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Product product = (Product) parent.getItemAtPosition(position);
+				
+				Intent intent = new Intent(context, NewProductActivity.class);
+				intent.putExtra("product", product);
+				
+				context.startActivity(intent);
+			}
+		});
         
         String codsupermercado = getIntent().getExtras().getString("codsupermercado");
 		String marca = getIntent().getExtras().getString("marca").toLowerCase();
