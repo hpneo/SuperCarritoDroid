@@ -29,6 +29,7 @@ public class ResultsActivity extends SherlockActivity implements TaskListener {
 	private ArrayList<Product> resultsCollection = new ArrayList<Product>();
 	private ListView results;
 	private ProductListAdapter resultsAdapter;
+	private String codsupermercado = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,18 +63,19 @@ public class ResultsActivity extends SherlockActivity implements TaskListener {
 				
 				Intent intent = new Intent(context, NewProductActivity.class);
 				intent.putExtra("product", product);
+				intent.putExtra("supermarket_id", codsupermercado);
 				
 				context.startActivity(intent);
 			}
 		});
         
-        String codsupermercado = getIntent().getExtras().getString("codsupermercado");
+        this.codsupermercado = getIntent().getExtras().getString("codsupermercado");
 		String marca = getIntent().getExtras().getString("marca").toLowerCase();
 		String categoria = getIntent().getExtras().getString("categoria").toLowerCase();
 		String oferta = getIntent().getExtras().getString("oferta").toLowerCase();
 		
 		ProductFilterTask task = new ProductFilterTask(this);
-		task.addParams("codsupermercado", codsupermercado);
+		task.addParams("codsupermercado", this.codsupermercado);
 		task.addParams("marca", marca);
 		task.addParams("categoria", categoria);
 		task.addParams("oferta", oferta);
