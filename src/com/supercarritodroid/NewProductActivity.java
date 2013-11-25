@@ -3,7 +3,6 @@ package com.supercarritodroid;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
@@ -52,7 +51,7 @@ public class NewProductActivity extends SherlockActivity {
         this.supermarket_id = (String) getIntent().getExtras().get("supermarket_id");
         
         EditText editTextSelectedProductName = (EditText) findViewById(R.id.editTextSelectedProductName);
-        EditText editTextSelectedProductUnitPrice = (EditText) findViewById(R.id.editTextSelectedProductUnitPrice);
+        final EditText editTextSelectedProductUnitPrice = (EditText) findViewById(R.id.editTextSelectedProductUnitPrice);
         Spinner spinnerSelectedProductCategory = (Spinner) findViewById(R.id.spinnerSelectedProductCategory);
         Spinner spinnerSelectedProductBrand = (Spinner) findViewById(R.id.spinnerSelectedProductBrand);
         final EditText editTextSelectedProductQuantity = (EditText) findViewById(R.id.editTextSelectedProductQuantity);
@@ -89,18 +88,26 @@ public class NewProductActivity extends SherlockActivity {
         Button buttonAdd = (Button) findViewById(R.id.buttonAdd);
         
         final Context context = this;
+        final SharedPreferences preferences = getSharedPreferences("SuperCarritoDroidPreferences", MODE_PRIVATE);
         
         buttonAdd.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				PurchaseTask purchaseTask = new PurchaseTask(new TaskListener() {
+			    PurchaseTask purchaseTask = new PurchaseTask();
+			    purchaseTask.addParams("codcompra", (Calendar.getInstance().getTimeInMillis() / 10000) + "");
+                purchaseTask.addParams("codcliente", preferences.getString("user_id", "0"));
+                purchaseTask.addParams("fechacompra", "25/11/2013");
+                purchaseTask.addParams("total", "0");
+                purchaseTask.execute("GetRegistraCompra");
+			    
+			    purchaseTask.setListener(new TaskListener() {
 					
 					@Override
 					public void onTaskError(Object result) {
 						Error error = (Error) result;
 						
-						Toast.makeText(context, "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+						Toast.makeText(context, "purchaseTask Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
 					}
 					
 					@Override
@@ -111,16 +118,25 @@ public class NewProductActivity extends SherlockActivity {
 					
 					@Override
 					public void onTaskCompleted(Object result) {
-						String purchase_id = (String) result;
+						final String purchase_id = String.valueOf(Integer.valueOf((String) result));
 						
 						Toast.makeText(context, "New purchase: " + purchase_id, Toast.LENGTH_LONG).show();
 						
-						PurchaseTask purchaseDetailTask = new PurchaseTask(new TaskListener() {
+						PurchaseTask purchaseDetailTask = new PurchaseTask();
+						purchaseDetailTask.addParams("codcomp", purchase_id);
+                        purchaseDetailTask.addParams("codCli", preferences.getString("user_id", "0"));
+                        purchaseDetailTask.addParams("codpro", product.getCodigo());
+                        purchaseDetailTask.addParams("codsuperm", supermarket_id);
+                        purchaseDetailTask.addParams("canti", editTextSelectedProductQuantity.getText().toString());
+                        purchaseDetailTask.addParams("subtot", "0");
+                        
+						purchaseDetailTask.setListener(new TaskListener() {
 							
 							@Override
 							public void onTaskError(Object result) {
-								// TODO Auto-generated method stub
-								
+							    Error error = (Error) result;
+		                        
+		                        Toast.makeText(context, "purchaseDetailTask Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
 							}
 							
 							@Override
@@ -132,30 +148,42 @@ public class NewProductActivity extends SherlockActivity {
 							@Override
 							public void onTaskCompleted(Object result) {
 								Toast.makeText(context, "New purchase detail: " + (String) result, Toast.LENGTH_LONG).show();
+								
+								double subtot = Double.valueOf(editTextSelectedProductQuantity.getText().toString()) * Double.valueOf(editTextSelectedProductUnitPrice.getText().toString());
+								
+								PurchaseTask updatePurchaseTask = new PurchaseTask();
+								updatePurchaseTask.addParams("codcomp", purchase_id);
+								updatePurchaseTask.addParams("subtot", String.valueOf(subtot));
+								
+								updatePurchaseTask.setListener(new TaskListener() {
+                                    
+                                    @Override
+                                    public void onTaskError(Object result) {
+                                        Error error = (Error) result;
+                                        
+                                        Toast.makeText(context, "updatePurchaseTask Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
+                                    
+                                    @Override
+                                    public void onTaskCompleted(Object result) {
+                                        // TODO Auto-generated method stub
+                                        
+                                    }
+                                    
+                                    @Override
+                                    public void onTaskCancelled(Object result) {
+                                        Toast.makeText(context, "New purchase detail updated: " + (String) result, Toast.LENGTH_LONG).show();
+                                    }
+                                });
+								
+								updatePurchaseTask.execute("GetActualizaCompra");
 							}
 						});
 						
-						SharedPreferences preferences = getSharedPreferences("SuperCarritoDroidPreferences", MODE_PRIVATE);
-						
-						Toast.makeText(context, product.getClass().getName(), Toast.LENGTH_LONG).show();
-						
-//						purchaseDetailTask.addParams("codcomp", purchase_id);
-//						purchaseDetailTask.addParams("codCli", preferences.getString("user_id", "0"));
-//						purchaseDetailTask.addParams("codpro", product.getCodigo());
-//						purchaseDetailTask.addParams("codsuperm", supermarket_id);
-//						purchaseDetailTask.addParams("canti", editTextSelectedProductQuantity.getText().toString());
-//						purchaseDetailTask.addParams("subtot", "0");
-						
-						purchaseDetailTask.execute("GetRegistraDetalleCompra?codcomp=" + purchase_id + "&codCli=" + preferences.getString("user_id", "0") + "&codpro=" + product.getCodigo() + "&codsuperm=" + supermarket_id + "&canti=" + editTextSelectedProductQuantity.getText().toString() + "&subtot=0");
+						purchaseDetailTask.execute("GetRegistraDetalleCompra");
 					}
 				});
-				
-				SharedPreferences preferences = getSharedPreferences("SuperCarritoDroidPreferences", MODE_PRIVATE);
-//				purchaseTask.addParams("codcompra", (Calendar.getInstance().getTimeInMillis() / 10000) + "");
-//                purchaseTask.addParams("codcliente", preferences.getString("user_id", "0"));
-//                purchaseTask.addParams("fechacompra", "25/11/2013");
-//                purchaseTask.addParams("total", "0");
-				purchaseTask.execute("GetRegistraCompra?codcompra=" + (Calendar.getInstance().getTimeInMillis() / 10000) + "&codcliente=" + preferences.getString("user_id", "0") + "&fechacompra=25/11/2013&total=0");
+
 			}
 		});
 	}

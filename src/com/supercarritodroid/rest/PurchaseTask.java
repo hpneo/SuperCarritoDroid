@@ -13,14 +13,21 @@ public class PurchaseTask extends AsyncTask<String, Void, String> {
 	private TaskListener listener;
 	private RestClient client;
 	private HashMap<String, String> params = new HashMap<String, String>();
-	
-	public PurchaseTask(TaskListener listener) {
-		this.listener = listener;
-	}
+    
+    public PurchaseTask() {
+    }
+    
+    public PurchaseTask(TaskListener listener) {
+        this.listener = listener;
+    }
 	
 	public void addParams(String name, String value) {
 		this.params.put(name, value);
 	}
+
+    public void setListener(TaskListener listener) {
+        this.listener = listener;
+    }
 	
 	@Override
 	protected String doInBackground(String... urls) {
