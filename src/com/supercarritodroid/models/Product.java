@@ -7,7 +7,9 @@ import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class Product implements Serializable {
+import com.jocasta.Model;
+
+public class Product extends Model implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	public static String BASE_URL = "http://androidservicios.somee.com/service1.svc/";

@@ -14,7 +14,20 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme"
+        android:name="com.jocasta.Application">
+        <meta-data
+            android:name="DATABASE"
+            android:value="super_carrito_droid.db" />
+        <meta-data
+            android:name="VERSION"
+            android:value="4"/>
+        <meta-data
+            android:name="DATABASE_DEBUG"
+            android:value="true"/>
+        <meta-data
+            android:name="MODELS_PACKAGE"
+            android:value="com.supercarritodroid.models"/>
         <activity
             android:name="com.supercarritodroid.LoginActivity"
             android:clearTaskOnLaunch="true"

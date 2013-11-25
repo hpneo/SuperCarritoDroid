@@ -12,10 +12,17 @@ import android.os.AsyncTask;
 public class SupermarketTask extends AsyncTask<String, Void, String> {
 	private TaskListener listener;
 	private RestClient client;
-	
-	public SupermarketTask(TaskListener listener) {
-		this.listener = listener;
-	}
+    
+    public SupermarketTask() {
+    }
+    
+    public SupermarketTask(TaskListener listener) {
+        this.listener = listener;
+    }
+
+    public void setListener(TaskListener listener) {
+        this.listener = listener;
+    }
 
 	@Override
 	protected String doInBackground(String... urls) {

@@ -7,7 +7,9 @@ import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class Supermarket implements Serializable {
+import com.jocasta.Model;
+
+public class Supermarket extends Model implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	public static String BASE_URL = "http://androidservicios.somee.com/service1.svc/";
@@ -26,6 +28,9 @@ public class Supermarket implements Serializable {
 	private String ruc;
 	private String rutaImagen;
 	private String telefono;
+	
+	public Supermarket() {
+	}
 	
 	public static Supermarket fromJSON(JSONObject jsonItem) {
 		Supermarket item = new Supermarket();

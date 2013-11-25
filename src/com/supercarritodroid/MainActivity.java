@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -82,8 +83,23 @@ public class MainActivity extends SherlockActivity implements TaskListener {
 			}
 		});
         
-        SupermarketTask task = new SupermarketTask(this);
-    	task.execute(Supermarket.URLS.get("index"));
+        fromDbOrService();
+        
+        
+    }
+    
+    private void fromDbOrService() {
+        if (Supermarket.isEmpty(Supermarket.class)) {
+            SupermarketTask task = new SupermarketTask(this);
+            task.execute(Supermarket.URLS.get("index"));
+        }
+        else {
+            ArrayList<Supermarket> list = (ArrayList<Supermarket>) Supermarket.all(Supermarket.class);
+            supermarketsCollection.clear();
+            supermarketsCollection.addAll(list);
+            
+            ((SupermarketListAdapter) supermarkets.getAdapter()).notifyDataSetChanged();
+        }
     }
 
 	@Override
