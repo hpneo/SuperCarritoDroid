@@ -89,6 +89,7 @@ public class NewProductActivity extends SherlockActivity {
         
         final Context context = this;
         final SharedPreferences preferences = getSharedPreferences("SuperCarritoDroidPreferences", MODE_PRIVATE);
+        final String codcliente = String.valueOf(Integer.valueOf(preferences.getString("user_id", "0").replaceAll("\\D*", "")));
         
         buttonAdd.setOnClickListener(new OnClickListener() {
 			
@@ -96,10 +97,9 @@ public class NewProductActivity extends SherlockActivity {
 			public void onClick(View v) {
 			    PurchaseTask purchaseTask = new PurchaseTask();
 			    purchaseTask.addParams("codcompra", (Calendar.getInstance().getTimeInMillis() / 10000) + "");
-                purchaseTask.addParams("codcliente", preferences.getString("user_id", "0"));
+                purchaseTask.addParams("codcliente", codcliente);
                 purchaseTask.addParams("fechacompra", "25/11/2013");
                 purchaseTask.addParams("total", "0");
-                purchaseTask.execute("GetRegistraCompra");
 			    
 			    purchaseTask.setListener(new TaskListener() {
 					
@@ -124,7 +124,7 @@ public class NewProductActivity extends SherlockActivity {
 						
 						PurchaseTask purchaseDetailTask = new PurchaseTask();
 						purchaseDetailTask.addParams("codcomp", purchase_id);
-                        purchaseDetailTask.addParams("codCli", preferences.getString("user_id", "0"));
+                        purchaseDetailTask.addParams("codCli", codcliente);
                         purchaseDetailTask.addParams("codpro", product.getCodigo());
                         purchaseDetailTask.addParams("codsuperm", supermarket_id);
                         purchaseDetailTask.addParams("canti", editTextSelectedProductQuantity.getText().toString());
@@ -184,6 +184,7 @@ public class NewProductActivity extends SherlockActivity {
 					}
 				});
 
+                purchaseTask.execute("GetRegistraCompra");
 			}
 		});
 	}
