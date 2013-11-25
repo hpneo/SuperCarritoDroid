@@ -2,13 +2,14 @@ package com.supercarritodroid;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.supercarritodroid.models.Product;
-import com.supercarritodroid.models.Supermarket;
 import com.supercarritodroid.rest.PurchaseTask;
 import com.supercarritodroid.rest.TaskListener;
 
@@ -136,18 +137,25 @@ public class NewProductActivity extends SherlockActivity {
 						
 						SharedPreferences preferences = getSharedPreferences("SuperCarritoDroidPreferences", MODE_PRIVATE);
 						
-						purchaseDetailTask.addParams("codcomp", purchase_id);
-						purchaseDetailTask.addParams("codCli", preferences.getString("user_id", "0"));
-						purchaseDetailTask.addParams("codpro", product.getCodigo());
-						purchaseDetailTask.addParams("codsuperm", supermarket_id);
-						purchaseDetailTask.addParams("canti", editTextSelectedProductQuantity.getText().toString());
-						purchaseDetailTask.addParams("subtot", "0");
+						Toast.makeText(context, product.getClass().getName(), Toast.LENGTH_LONG).show();
 						
-						purchaseDetailTask.execute("GetRegistraDetalleCompra");
+//						purchaseDetailTask.addParams("codcomp", purchase_id);
+//						purchaseDetailTask.addParams("codCli", preferences.getString("user_id", "0"));
+//						purchaseDetailTask.addParams("codpro", product.getCodigo());
+//						purchaseDetailTask.addParams("codsuperm", supermarket_id);
+//						purchaseDetailTask.addParams("canti", editTextSelectedProductQuantity.getText().toString());
+//						purchaseDetailTask.addParams("subtot", "0");
+						
+						purchaseDetailTask.execute("GetRegistraDetalleCompra?codcomp=" + purchase_id + "&codCli=" + preferences.getString("user_id", "0") + "&codpro=" + product.getCodigo() + "&codsuperm=" + supermarket_id + "&canti=" + editTextSelectedProductQuantity.getText().toString() + "&subtot=0");
 					}
 				});
 				
-				purchaseTask.execute("GetRegistraCompra?codcompra=" + 123456789 + "&codcliente=1&fechacompra=12/06/13&total=0");
+				SharedPreferences preferences = getSharedPreferences("SuperCarritoDroidPreferences", MODE_PRIVATE);
+//				purchaseTask.addParams("codcompra", (Calendar.getInstance().getTimeInMillis() / 10000) + "");
+//                purchaseTask.addParams("codcliente", preferences.getString("user_id", "0"));
+//                purchaseTask.addParams("fechacompra", "25/11/2013");
+//                purchaseTask.addParams("total", "0");
+				purchaseTask.execute("GetRegistraCompra?codcompra=" + (Calendar.getInstance().getTimeInMillis() / 10000) + "&codcliente=" + preferences.getString("user_id", "0") + "&fechacompra=25/11/2013&total=0");
 			}
 		});
 	}
