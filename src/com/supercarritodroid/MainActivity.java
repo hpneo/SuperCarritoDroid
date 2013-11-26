@@ -2,21 +2,23 @@ package com.supercarritodroid;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.jocasta.callbacks.AsyncFailCallback;
+import com.jocasta.callbacks.AsyncSuccessCallback;
 import com.supercarritodroid.adapters.SupermarketListAdapter;
 import com.supercarritodroid.models.Supermarket;
-import com.supercarritodroid.rest.SupermarketTask;
-import com.supercarritodroid.rest.TaskListener;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,7 +26,7 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-public class MainActivity extends SherlockActivity implements TaskListener {
+public class MainActivity extends SherlockActivity {
 	private ActionBar actionBar = null;
 	private DrawerLayout drawer = null;
 	private ListView drawerList = null;
@@ -83,49 +85,51 @@ public class MainActivity extends SherlockActivity implements TaskListener {
 			}
 		});
         
-        fromDbOrService();
-        
-        
+        loadFromDbOrService();
     }
     
-    private void fromDbOrService() {
+    private void loadFromDbOrService() {
+        final Context context = this;
+        
         if (Supermarket.isEmpty(Supermarket.class)) {
-            SupermarketTask task = new SupermarketTask(this);
-            task.execute(Supermarket.URLS.get("index"));
+            Toast.makeText(context, "From Service", Toast.LENGTH_LONG).show();
+            
+            Supermarket.fetch(Supermarket.class, new AsyncSuccessCallback() {
+                
+                @Override
+                public void run(String results) {
+                    try {
+                        ArrayList<Supermarket> list = Supermarket.fromJSON(new JSONArray(results));
+                        
+                        for (Supermarket supermarket : list) {
+                            supermarket.save();
+                        }
+                        
+                        populateSupermarketsListView(list);
+                    } catch (JSONException error) {
+                        Toast.makeText(context, "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            }, new AsyncFailCallback() {
+                
+                @Override
+                public void run(Exception error) {
+                    Toast.makeText(context, "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
         }
         else {
-            ArrayList<Supermarket> list = (ArrayList<Supermarket>) Supermarket.all(Supermarket.class);
-            supermarketsCollection.clear();
-            supermarketsCollection.addAll(list);
-            
-            ((SupermarketListAdapter) supermarkets.getAdapter()).notifyDataSetChanged();
+            Toast.makeText(context, "From DB", Toast.LENGTH_LONG).show();
+            populateSupermarketsListView((ArrayList<Supermarket>) Supermarket.all(Supermarket.class));
         }
     }
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public void onTaskCompleted(Object result) {
-		ArrayList<Supermarket> list = (ArrayList<Supermarket>) result;
-		
-		supermarketsCollection.clear();
-		supermarketsCollection.addAll(list);
-		
-		((SupermarketListAdapter) supermarkets.getAdapter()).notifyDataSetChanged();
-	}
-
-	@Override
-	public void onTaskError(Object result) {
-		Error error = (Error) result;
-		
-		Toast.makeText(this, "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
-	}
-
-	@Override
-	public void onTaskCancelled(Object result) {
-		String message = (String) result;
-		
-		Toast.makeText(this, "Cancelled: " + message, Toast.LENGTH_LONG).show();
-	}
+    
+    private void populateSupermarketsListView(ArrayList<Supermarket> list) {
+        supermarketsCollection.clear();
+        supermarketsCollection.addAll(list);
+        
+        ((SupermarketListAdapter) supermarkets.getAdapter()).notifyDataSetChanged();
+    }
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
