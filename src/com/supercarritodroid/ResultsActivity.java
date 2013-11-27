@@ -15,8 +15,6 @@ import com.jocasta.callbacks.AsyncFailCallback;
 import com.jocasta.callbacks.AsyncSuccessCallback;
 import com.supercarritodroid.adapters.ProductListAdapter;
 import com.supercarritodroid.models.Product;
-import com.supercarritodroid.rest.ProductFilterTask;
-import com.supercarritodroid.rest.TaskListener;
 
 import android.app.Activity;
 import android.content.Context;
@@ -31,7 +29,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class ResultsActivity extends SherlockActivity implements TaskListener {
+public class ResultsActivity extends SherlockActivity {
 	private ActionBar actionBar = null;
 	private DrawerLayout drawer = null;
 	private ListView drawerList = null;
@@ -123,40 +121,6 @@ public class ResultsActivity extends SherlockActivity implements TaskListener {
                 });
             }
         });
-		
-//		ProductFilterTask task = new ProductFilterTask(this);
-//		task.addParams("codsupermercado", this.codsupermercado);
-//		task.addParams("marca", marca);
-//		task.addParams("categoria", categoria);
-//		task.addParams("oferta", oferta);
-//		task.execute(Product.URLS.get("search"));
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public void onTaskCompleted(Object result) {
-//		ArrayList<Product> list = (ArrayList<Product>) result;
-//		
-//		Toast.makeText(this, list.size() + " products found", Toast.LENGTH_LONG).show();
-//
-//		 resultsCollection.clear();
-//		 resultsCollection.addAll(list);
-//
-//		 ((ProductListAdapter) results.getAdapter()).notifyDataSetChanged();
-	}
-
-	@Override
-	public void onTaskError(Object result) {
-//		Error error = (Error) result;
-//		
-//		Toast.makeText(this, "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
-	}
-
-	@Override
-	public void onTaskCancelled(Object result) {
-//		String message = (String) result;
-//		
-//		Toast.makeText(this, "Cancelled: " + message, Toast.LENGTH_LONG).show();
 	}
 	
 	@Override

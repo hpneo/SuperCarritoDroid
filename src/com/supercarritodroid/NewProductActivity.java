@@ -3,12 +3,18 @@ package com.supercarritodroid;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.jocasta.Model;
+import com.jocasta.callbacks.SuccessCallback;
+import com.jocasta.utils.Inflector;
 import com.supercarritodroid.models.Product;
+import com.supercarritodroid.models.Purchase;
+import com.supercarritodroid.models.PurchaseDetail;
 import com.supercarritodroid.rest.PurchaseTask;
 import com.supercarritodroid.rest.TaskListener;
 
@@ -16,6 +22,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -73,7 +80,7 @@ public class NewProductActivity extends SherlockActivity {
         int categories_index = categories.indexOf(this.product.getCategoria());
         int brands_index = brands.indexOf(this.product.getMarca());
         
-        editTextSelectedProductName.setText(this.product.getNombre());
+        editTextSelectedProductName.setText(Inflector.titleize(this.product.getNombre()));
         editTextSelectedProductUnitPrice.setText(this.product.getPrecio().toString());
         editTextSelectedProductQuantity.setText("1");
         
@@ -95,6 +102,15 @@ public class NewProductActivity extends SherlockActivity {
 			
 			@Override
 			public void onClick(View v) {
+			    Purchase purchase = new Purchase();
+			    purchase.setCodigoCliente(Integer.valueOf(codcliente));
+			    purchase.setFechaCompra(new Date());
+			    purchase.setTotal(0.0);
+			    
+			    purchase.save();
+			    
+			    Log.i("Purchase#id", purchase.id + "");
+			    
 			    PurchaseTask purchaseTask = new PurchaseTask();
 			    purchaseTask.addParams("codcompra", (Calendar.getInstance().getTimeInMillis() / 10000) + "");
                 purchaseTask.addParams("codcliente", codcliente);
@@ -121,6 +137,20 @@ public class NewProductActivity extends SherlockActivity {
 						final String purchase_id = String.valueOf(Integer.valueOf((String) result));
 						
 						Toast.makeText(context, "New purchase: " + purchase_id, Toast.LENGTH_LONG).show();
+						
+						PurchaseDetail purchaseDetail = new PurchaseDetail();
+						purchaseDetail.setCodigoCompra(Integer.valueOf(purchase_id));
+						purchaseDetail.setCodigoCliente(Integer.valueOf(codcliente));
+						purchaseDetail.setCodigoProducto(Integer.valueOf(product.getCodigo()));
+						purchaseDetail.setCodigoSupermercado(Integer.valueOf(supermarket_id));
+						purchaseDetail.setCantidad(Integer.valueOf(editTextSelectedProductQuantity.getText().toString()));
+						
+						double subtotal = purchaseDetail.getCantidad() * Double.valueOf(editTextSelectedProductUnitPrice.getText().toString());
+						
+						purchaseDetail.setSubtotal(subtotal);
+						purchaseDetail.save();
+						
+						Log.i("New purchase detail saved in database", purchaseDetail.id.toString());
 						
 						PurchaseTask purchaseDetailTask = new PurchaseTask();
 						purchaseDetailTask.addParams("codcomp", purchase_id);
