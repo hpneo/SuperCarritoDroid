@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -91,6 +92,8 @@ public class MainActivity extends SherlockActivity {
     private void loadFromDbOrService() {
         final Context context = this;
         
+        // Supermarket.clear(Supermarket.class);
+        
         if (Supermarket.isEmpty(Supermarket.class)) {
             Toast.makeText(context, "From Service", Toast.LENGTH_LONG).show();
             
@@ -102,6 +105,7 @@ public class MainActivity extends SherlockActivity {
                         ArrayList<Supermarket> list = Supermarket.fromJSON(new JSONArray(results));
                         
                         for (Supermarket supermarket : list) {
+                            Log.i("SUPER_CARRITO_DROID", supermarket + "");
                             supermarket.save();
                         }
                         

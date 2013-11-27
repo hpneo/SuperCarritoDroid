@@ -8,12 +8,16 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.jocasta.Model;
+import com.jocasta.annotations.Ignore;
 
 public class Product extends Model implements Serializable {
+    @Ignore
 	private static final long serialVersionUID = 1L;
-	
+
+    @Ignore
 	public static String BASE_URL = "http://androidservicios.somee.com/service1.svc/";
-	
+
+    @Ignore
 	public static HashMap<String, String> URLS = new HashMap<String, String>(){
 		private static final long serialVersionUID = 1L;
 

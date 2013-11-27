@@ -13,9 +13,11 @@ import com.jocasta.annotations.Ignore;
 public class Supermarket extends Model implements Serializable {
     @Ignore
 	private static final long serialVersionUID = 1L;
-	
+
     @Ignore
-	public static String BASE_URL = "http://androidservicios.somee.com/service1.svc/";
+    public static String resourceURL = "";
+    @Ignore
+    public static String BASE_URL = "http://androidservicios.somee.com/service1.svc/";
 	
     @Ignore
 	public static HashMap<String, String> URLS = new HashMap<String, String>(){
@@ -101,4 +103,7 @@ public class Supermarket extends Model implements Serializable {
 		this.telefono = telefono;
 	}
 
+	public static String getResourceUrl(String action) {
+	    return BASE_URL + resourceURL + URLS.get(action);
+	}
 }

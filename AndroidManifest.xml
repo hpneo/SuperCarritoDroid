@@ -21,7 +21,7 @@
             android:value="super_carrito_droid.db" />
         <meta-data
             android:name="VERSION"
-            android:value="4"/>
+            android:value="5"/>
         <meta-data
             android:name="DATABASE_DEBUG"
             android:value="true"/>

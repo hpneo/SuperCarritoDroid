@@ -2,19 +2,28 @@ package com.supercarritodroid;
 
 import java.util.ArrayList;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.jocasta.callbacks.AsyncFailCallback;
+import com.jocasta.callbacks.AsyncSuccessCallback;
 import com.supercarritodroid.adapters.ProductListAdapter;
 import com.supercarritodroid.models.Product;
 import com.supercarritodroid.rest.ProductFilterTask;
 import com.supercarritodroid.rest.TaskListener;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -37,6 +46,7 @@ public class ResultsActivity extends SherlockActivity implements TaskListener {
 		setContentView(R.layout.activity_results);
 		
 		final Context context = this;
+		final Activity activity = this;
         
         this.actionBar = this.getSupportActionBar();
         this.actionBar.setTitle(R.string.title_activity_search);
@@ -68,45 +78,85 @@ public class ResultsActivity extends SherlockActivity implements TaskListener {
 				context.startActivity(intent);
 			}
 		});
+
+        this.codsupermercado = getIntent().getExtras().getString("supermarket_id");
+        String marca = getIntent().getExtras().getString("marca").toLowerCase();
+        String categoria = getIntent().getExtras().getString("categoria").toLowerCase();
+        String oferta = getIntent().getExtras().getString("oferta").toLowerCase();
         
-        this.codsupermercado = getIntent().getExtras().getString("codsupermercado");
-		String marca = getIntent().getExtras().getString("marca").toLowerCase();
-		String categoria = getIntent().getExtras().getString("categoria").toLowerCase();
-		String oferta = getIntent().getExtras().getString("oferta").toLowerCase();
+        ArrayList<NameValuePair> filterParams = new ArrayList<NameValuePair>();
+        
+        filterParams.add(new BasicNameValuePair("codsupermercado", this.codsupermercado));
+        filterParams.add(new BasicNameValuePair("marca", marca));
+        filterParams.add(new BasicNameValuePair("categoria", categoria));
+        filterParams.add(new BasicNameValuePair("oferta", oferta));
+        
+        Product.get(Product.BASE_URL + Product.URLS.get("search"), filterParams, new AsyncSuccessCallback() {
+            
+            @Override
+            public void run(String data) {
+                if (!data.equals(null)) {
+                    try {
+                        ArrayList<Product> list = Product.fromJSON(new JSONArray(data));
+                        
+                        Toast.makeText(context, list.size() + " products found", Toast.LENGTH_LONG).show();
+
+                        resultsCollection.clear();
+                        resultsCollection.addAll(list);
+
+                        ((ProductListAdapter) results.getAdapter()).notifyDataSetChanged();
+                    } catch (JSONException e) {
+                    }
+                }
+            }
+        }, new AsyncFailCallback() {
+            
+            @Override
+            public void run(final Exception error) {
+                Log.i("ResultsActivity", error.getMessage());
+                activity.runOnUiThread(new Runnable() {
+                    
+                    @Override
+                    public void run() {
+                        Toast.makeText(context, "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        });
 		
-		ProductFilterTask task = new ProductFilterTask(this);
-		task.addParams("codsupermercado", this.codsupermercado);
-		task.addParams("marca", marca);
-		task.addParams("categoria", categoria);
-		task.addParams("oferta", oferta);
-		task.execute(Product.URLS.get("search"));
+//		ProductFilterTask task = new ProductFilterTask(this);
+//		task.addParams("codsupermercado", this.codsupermercado);
+//		task.addParams("marca", marca);
+//		task.addParams("categoria", categoria);
+//		task.addParams("oferta", oferta);
+//		task.execute(Product.URLS.get("search"));
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public void onTaskCompleted(Object result) {
-		ArrayList<Product> list = (ArrayList<Product>) result;
-		
-		Toast.makeText(this, list.size() + " products found", Toast.LENGTH_LONG).show();
-
-		 resultsCollection.clear();
-		 resultsCollection.addAll(list);
-
-		 ((ProductListAdapter) results.getAdapter()).notifyDataSetChanged();
+//		ArrayList<Product> list = (ArrayList<Product>) result;
+//		
+//		Toast.makeText(this, list.size() + " products found", Toast.LENGTH_LONG).show();
+//
+//		 resultsCollection.clear();
+//		 resultsCollection.addAll(list);
+//
+//		 ((ProductListAdapter) results.getAdapter()).notifyDataSetChanged();
 	}
 
 	@Override
 	public void onTaskError(Object result) {
-		Error error = (Error) result;
-		
-		Toast.makeText(this, "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
+//		Error error = (Error) result;
+//		
+//		Toast.makeText(this, "Error: " + error.getMessage(), Toast.LENGTH_LONG).show();
 	}
 
 	@Override
 	public void onTaskCancelled(Object result) {
-		String message = (String) result;
-		
-		Toast.makeText(this, "Cancelled: " + message, Toast.LENGTH_LONG).show();
+//		String message = (String) result;
+//		
+//		Toast.makeText(this, "Cancelled: " + message, Toast.LENGTH_LONG).show();
 	}
 	
 	@Override

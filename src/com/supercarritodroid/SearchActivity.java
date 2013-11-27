@@ -55,7 +55,7 @@ public class SearchActivity extends SherlockActivity {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(context, ResultsActivity.class);
-				intent.putExtra("codsupermercado", supermarket.getCodigo());
+				intent.putExtra("supermarket_id", supermarket.getCodigo());
 				intent.putExtra("marca", spinnerBrands.getSelectedItem().toString());
 				intent.putExtra("categoria", spinnerCategories.getSelectedItem().toString());
 				intent.putExtra("oferta", checkBoxInOffer.isChecked() ? "si" : "no");
